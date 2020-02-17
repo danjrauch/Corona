@@ -28,4 +28,4 @@ if __name__ == '__main__':
     # append the handler to the default application logger
     app.logger.addHandler(handler)
 
-    app.run()
+    app.run(port=443, debug=True)
