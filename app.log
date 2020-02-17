@@ -1,0 +1,2 @@
+2020-02-16 18:37:10,671 INFO: GET Processed [in run.py:7] -- ip: 127.0.0.1, url: http://127.0.0.1:5000/time_series/, method:GET
+2020-02-16 18:37:55,610 INFO: GET Processed [in run.py:7] -- ip: 127.0.0.1, url: http://127.0.0.1:5000/time_series/, method:GET
