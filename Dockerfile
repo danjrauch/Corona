@@ -6,11 +6,9 @@ FROM python:3.5
 # RUN apt-get install -y mongodb-org
 # RUN systemctl start mongod
 
-RUN apt install python-pip
-
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
-        libatlas-base-dev gfortran nginx supervisor
+        libatlas-base-dev ufw gfortran nginx supervisor
 
 RUN pip3 install uwsgi
 
@@ -20,11 +18,13 @@ RUN pip3 install -r /project/requirements.txt
 
 RUN useradd --no-create-home nginx
 
+RUN ufw allow 'Nginx HTTP'
+
 RUN rm /etc/nginx/sites-enabled/default
 RUN rm -r /root/.cache
 
 COPY server-conf/nginx.conf /etc/nginx/
-COPY server-conf/flask-site-nginx.conf /etc/nginx/conf.d/
+COPY server-conf/eve-nginx.conf /etc/nginx/conf.d/
 COPY server-conf/uwsgi.ini /etc/uwsgi/
 COPY server-conf/supervisord.conf /etc/supervisor/
 
@@ -32,6 +32,8 @@ COPY src /project/src
 
 WORKDIR /project
 
-RUN python transform.py
+# RUN mongod
+
+# RUN python src/transform.py
 
 CMD ["/usr/bin/supervisord"]

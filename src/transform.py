@@ -10,7 +10,7 @@ import io
 import os
 
 
-with open('metadata.json') as md_file:
+with open('src/metadata.json') as md_file:
     metadata = json.load(md_file)
 
 
