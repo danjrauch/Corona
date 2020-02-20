@@ -18,8 +18,6 @@ RUN pip3 install -r /project/requirements.txt
 
 RUN useradd --no-create-home nginx
 
-RUN ufw allow 'Nginx HTTP'
-
 RUN rm /etc/nginx/sites-enabled/default
 RUN rm -r /root/.cache
 
@@ -31,6 +29,8 @@ COPY server-conf/supervisord.conf /etc/supervisor/
 COPY src /project/src
 
 WORKDIR /project
+
+EXPOSE 80 443
 
 # RUN mongod
 
