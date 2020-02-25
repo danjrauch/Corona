@@ -1,11 +1,5 @@
 FROM python:3.5
 
-# RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-# RUN echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
-# RUN apt-get update
-# RUN apt-get install -y mongodb-org
-# RUN systemctl start mongod
-
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
         libatlas-base-dev ufw gfortran nginx supervisor
