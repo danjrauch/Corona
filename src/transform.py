@@ -37,20 +37,16 @@ def transform_time_series_file(df, type):
             else:
                 element['date'] = col_name
                 element[type] = v
-                data.append(element)
+                data.append(element.copy())
     return data
 
 
 def retrieve_time_series_data():
-    client = pymongo.MongoClient('mongodb://localhost:27017/')
-    db = client['corona']
-    time_series_col = db['time_series']
-
-    time_series_col.remove({});
-
     agg = {}
 
-    for type in ['confirmed', 'recovered', 'deaths']:
+    types = ['confirmed', 'recovered', 'deaths']
+
+    for type in types:
         # Retrieve the data from a file and construct a dataframe
         ts_df = retrieve_csv(metadata['time_series']['url'] + '/' + metadata['time_series'][type]['file_name'])
         ts_df = ts_df.fillna(value={'Province/State':'','Country/Region':''})
@@ -66,12 +62,38 @@ def retrieve_time_series_data():
             else:
                 agg[key] = d
 
+        for k, v in agg.items():
+            for type in types:
+                if type not in v:
+                    v[type] = 0
+
+        for k, v in agg.items():
+            for type in types:
+                if type not in v:
+                    print('Value is missing: ')
+                    print(v)
+
+    df_agg = pd.DataFrame(agg.values(), columns=['province/state', 'country/region', 'lat', 'long', 'date', 'confirmed', 'recovered', 'deaths'])
+
+    return df_agg
+
+
+def save_to_cloud(df, database_name, collection_name):
+    client = pymongo.MongoClient('mongodb+srv://pathogen:OdX2kR9DmzPLmuXk@corona-lvqsz.azure.mongodb.net/test?retryWrites=true&w=majority')
+    db = client[database_name]
+    col = db[collection_name]
+
+    col.delete_many({})
+
+    # df_agg.to_csv('here.csv', encoding='utf-8', index=False)
+
     data = []
-    for val in agg.values():
-        data.append(val)
+    for idx, row in df.iterrows():
+        data.append(row.to_dict())
 
     # Insert into Mongo
-    x = time_series_col.insert_many(data)
+    x = col.insert_many(data)
+
 
 if __name__ == '__main__':
     logger = logging.getLogger()
@@ -82,5 +104,6 @@ if __name__ == '__main__':
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.info('UPDATE: Started')
-    retrieve_time_series_data()
+    df = retrieve_time_series_data()
+    save_to_cloud(df, 'corona', 'time_series')
     logger.info('UPDATE: Done')

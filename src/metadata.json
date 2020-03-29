@@ -1,13 +1,13 @@
 {
   "time_series": {
     "confirmed": {
-      "file_name": "time_series_19-covid-Confirmed.csv"
+      "file_name": "time_series_covid19_confirmed_global.csv"
     },
     "recovered": {
-      "file_name": "time_series_19-covid-Recovered.csv"
+      "file_name": "time_series_covid19_recovered_global.csv"
     },
     "deaths": {
-      "file_name": "time_series_19-covid-Deaths.csv"
+      "file_name": "time_series_covid19_deaths_global.csv"
     },
     "url": "https://api.github.com/repos/CSSEGISandData/COVID-19/contents/csse_covid_19_data/csse_covid_19_time_series",
     "column_names": ["Province/State", "Country/Region", "Lat", "Long", "Date", "Confirmed", "Deaths", "Recovered"]
